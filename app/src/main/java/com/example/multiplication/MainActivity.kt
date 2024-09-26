@@ -18,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.multiplication.DataStore.Store
+import com.example.multiplication.Navigation.AppNavigation
 import com.example.multiplication.Screens.UserName
 import com.example.multiplication.Screens.show
 import com.example.multiplication.ui.theme.MultiplicationTheme
@@ -28,9 +29,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ScreenWork()
+            AppNavigation()
 
-    }
+        }
 }
 
 
