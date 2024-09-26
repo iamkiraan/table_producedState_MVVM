@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,16 +31,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.datastore.core.DataStore
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-
+import com.example.multiplication.DataStore.Store
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun UserName(navController:NavController) {
+    var flag = false
+    val context = LocalContext.current
     var Ftext by remember{ mutableStateOf("") }
     var Ltext by remember{ mutableStateOf("") }
-    val context = LocalContext.current
+    //dataStore
+    val dataStoreF = Store(context)
+   //scope
+    val scope = rememberCoroutineScope()
+
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopCenter
@@ -77,7 +87,8 @@ fun UserName(navController:NavController) {
       //last name  ko lagi
       OutlinedTextField(value = Ltext, onValueChange = { Ltext = it },
           shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 10.dp),
-          modifier = Modifier.padding(top = 10.dp)
+          modifier = Modifier
+              .padding(top = 10.dp)
               .background(Color.White),
           label = {
               Text("last name")
@@ -99,6 +110,14 @@ fun UserName(navController:NavController) {
 
                     } else{
                         navController.navigate("screen_B")
+                        flag=true
+                        //launching coroutine for saving information
+                        scope.launch {
+                            dataStoreF.saveFirstName(Ftext)
+                            dataStoreF.saveLastName(Ltext)
+                            dataStoreF.saveFlag(flag)
+
+                        }
                     }
 
 
@@ -108,8 +127,9 @@ fun UserName(navController:NavController) {
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
                     .fillMaxWidth(.80f)
-                    .padding(top = 10. dp
-            )
+                    .padding(
+                        top = 10.dp
+                    )
             ) {
             Text(text = "Submit")
 
